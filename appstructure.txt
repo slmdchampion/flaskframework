@@ -1,0 +1,23 @@
+main.py
+    app
+    __init__.py
+    ----database
+        __init__.py
+    ----section1
+        __init__.py
+        routes.py
+        forms.py
+        ----static
+        ----templates
+    ----section2
+        __init__.py
+        routes.py
+        forms.py     
+        ----static
+        ----templates   
+    ----section3
+        __init__.py
+        routes.py
+        forms.py
+        ----static
+        ----templates
