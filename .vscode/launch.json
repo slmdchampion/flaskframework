@@ -12,7 +12,7 @@
             "env": {
                 "FLASK_APP": "main.py",
                 "FLASK_DEBUG": "1",
-                "FLASKFRAMEWORK_SETTINGS":  "/home/robert/pythondev/flaskframework/debug.cfg"
+                "FLASKFRAMEWORK_SETTINGS": "C:/Users/Bob/Documents/python dev/flaskframework/debug.cfg"
             },
             "args": [
                 "run",
