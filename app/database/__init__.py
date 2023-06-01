@@ -1,8 +1,8 @@
-from flask_security import SQLAlchemySessionUserDatastore
-from app.database.base import sa,security
-from app.database.security import User, Role
+from flask_security import Security
+from app.database.base import sa
+from app.database.security import user_datastore
 
 def init_app(app):
     sa.init_app(app)
-    user_datastore = SQLAlchemySessionUserDatastore(sa.session, User, Role)
-    security.init_app(app, user_datastore)
+
+    security = Security(app, user_datastore)

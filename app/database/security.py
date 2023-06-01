@@ -1,4 +1,6 @@
 from flask_security import UserMixin, RoleMixin
+from flask_security import SQLAlchemyUserDatastore
+
 from app.database.base import sa
 
 class RolesUsers(sa.Model):
@@ -27,4 +29,4 @@ class User(sa.Model, UserMixin):
     fs_uniquifier = sa.Column(sa.String)
     status = sa.Column(sa.Integer, sa.ForeignKey('employment status.ID'))
 
-
+user_datastore = SQLAlchemyUserDatastore(sa, User, Role)
