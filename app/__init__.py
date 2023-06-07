@@ -1,5 +1,5 @@
 from flask import Flask
-from app import database, section1
+from app import database, calibration
 
 def create_app():
     app = Flask(__name__)
@@ -12,5 +12,5 @@ def create_app():
     
 
     database.init_app(app)
-    section1.init_app(app)
+    calibration.init_app(app)
     return app

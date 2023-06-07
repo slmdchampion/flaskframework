@@ -70,9 +70,9 @@ class Calibration_certificates(sa.Model):
     measurement28 = sa.Column('measurement 28', sa.Float, default=0)
     measurement29 = sa.Column('measurement 29', sa.Float, default=0)
     measurement30 = sa.Column('measurement 30', sa.Float, default=0)
-    bool1 = sa.Column('bool 1', sa.Boolean)
-    bool2 = sa.Column('bool 2', sa.Boolean)
-    bool3 = sa.Column('bool 3', sa.Boolean)
+    bool1 = sa.Column('bool 1', sa.String)
+    bool2 = sa.Column('bool 2', sa.String)
+    bool3 = sa.Column('bool 3', sa.String)
     qualification1 = sa.Column('qualification 1', sa.String)
     qualification2 = sa.Column('qualification 2', sa.String)
     qualification3 = sa.Column('qualification 3', sa.String)
@@ -85,8 +85,8 @@ class Calibration_certificates(sa.Model):
 
 class Calibration_references(sa.Model):
     __tablename__ = 'calibration references'
-    id = sa.Column(sa.Integer, primary_key=True)
-    requirement1 = sa.Column('requirement 1', sa.Float, default=0)
+    id = sa.Column('ID', sa.Integer, primary_key=True)
+    requirement1 = sa.Column('requirement 1', sa.Double, default=0)
     requirement2 = sa.Column('requirement 2', sa.Float, default=0)
     requirement3 = sa.Column('requirement 3', sa.Float, default=0)
     requirement4 = sa.Column('requirement 4', sa.Float, default=0)
@@ -116,13 +116,14 @@ class Calibration_references(sa.Model):
     requirement28 = sa.Column('requirement 28', sa.Float, default=0)
     requirement29 = sa.Column('requirement 29', sa.Float, default=0)
     requirement30 = sa.Column('requirement 30', sa.Float, default=0)   
-    bool1 = sa.Column('bool 1', sa.Boolean)
-    bool2 = sa.Column('bool 2', sa.Boolean)
-    bool3 = sa.Column('bool 3', sa.Boolean)
+    bool1 = sa.Column('bool 1', sa.String)
+    bool2 = sa.Column('bool 2', sa.String)
+    bool3 = sa.Column('bool 3', sa.String)
     standard1 = sa.Column('Standard 1', sa.Integer, ForeignKey("gauges.ID"))
     standard2 = sa.Column('Standard 2', sa.Integer, ForeignKey("gauges.ID"))
     standard3 = sa.Column('Standard 3', sa.Integer, ForeignKey("gauges.ID"))
     standard4 = sa.Column('Standard 4', sa.Integer, ForeignKey("gauges.ID"))
+    gauge_types = sa.relationship('Gauge_types', backref='referencedata')
 
 class Gauges(sa.Model):
     id = sa.Column('ID', sa.Integer, primary_key=True)
@@ -141,6 +142,7 @@ class Gauges(sa.Model):
     column14 = sa.Column('Column 14', sa.Integer)
     # references = sa.relationship('Calibration_references', backref='gauges', lazy='dynamic', foreign_keys=['Standard1', 'Standard2', 'Standard3', 'Standard4'])
     certificates = sa.relationship('Calibration_certificates', backref='gaugedata', foreign_keys=[Calibration_certificates.gauge])
+
 class Gauge_owners(sa.Model):
     __tablename__ = 'gauge owners'
     id = sa.Column('ID', sa.Integer, primary_key=True)
@@ -160,6 +162,7 @@ class Gauge_types(sa.Model):
     id = sa.Column('ID', sa.Integer, primary_key=True)
     description = sa.Column('Description', sa.String)
     calibration_reference = sa.Column('calibration reference', sa.Integer, ForeignKey("calibration references.ID"))
+    calibration_link = sa.Column('calibration link', sa.String)
     gauges = sa.relationship('Gauges', backref='type', lazy='dynamic')
 
 class Uncertainties(sa.Model):
@@ -168,7 +171,3 @@ class Uncertainties(sa.Model):
     gauge_type = sa.Column('gauge type', sa.Integer, ForeignKey("gauge types.ID"))
     uncertainty = sa.Column(sa.Float)
 
-class Database:
-    def get_test_table(self):
-        result = sa.session.execute(text("SELECT * FROM `test`.`table`"))
-        return result

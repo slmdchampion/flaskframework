@@ -1,0 +1,203 @@
+
+{% extends "navbar.html" %}
+{% from "_formhelpers.html" import render_nolabelfield %}
+{% from "_formhelpers.html" import render_flatfield %}
+{% block title %}Add Product {% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('calibration.static', filename='css/leadstandard.css') }}" />
+{% endblock %}
+{% block content %}
+<div class="container-fluid h-100" >
+  <div class="row h-100 align-items-center">
+    {% include "security/_messages.html" %}
+    
+    <form name="form1" id="form1" action="{{ url_for('calibration.leadstandardcert') }}" method="POST" enctype="multipart/form-data">
+      {{ form.csrf_token }}
+      <fieldset>
+        <div class="container-fluid" id="topbox">
+          <div class="row mx-1">
+            {{ form.id.label(class="col-sm-3 col-form-label d-none") }}
+            <div class="col-sm-3 d-none">
+              {{ render_nolabelfield(form.id, class="form-control", value=gauge_data.id, readonly=true) }}
+            </div>
+          </div>
+          <div class="row mx-1">
+            {{ form.certificate_number.label(class="col-sm-3 col-form-label") }}
+            <div class="col-sm-3">
+              {{ render_nolabelfield(form.certificate_number, class="form-control", value=newcertnumber, readonly=true) }}
+            </div>
+            {{ form.calibration_date.label(class="col-sm-3 col-form-label") }}
+            <div class="col-sm-3">
+              {{ render_nolabelfield(form.calibration_date , class="form-control", value=today) }}
+            </div>
+          </div>
+          <div class="row mx-1">
+            <div class="col-sm-3">
+              Instrument:
+            </div>
+            <div class="col-sm-3">
+              {{ gauge_data.description }}
+            </div>
+            {{ form.due_date.label(class="col-sm-3 col-form-label") }}
+            <div class="col-sm-3">
+              {{ render_nolabelfield(form.due_date , class="form-control", value=newcaldue) }}
+            </div>
+          </div>
+          <div class="row mx-1">
+            <div class="col-sm-3">
+              Serial Number:
+            </div>
+            <div class="col-sm-3">
+              {{ gauge_data.serial_number }}
+            </div>
+            {{ form.as_found.label(class="col-sm-3 col-form-label") }}
+            <div class="col-sm-3">
+              {{ render_nolabelfield(form.as_found , class="form-control") }}
+            </div>
+          </div>
+          <div class="row mx-1">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-3"></div>
+            {{ form.as_left.label(class="col-sm-3 col-form-label") }}
+            <div class="col-sm-3">
+              {{ render_nolabelfield(form.as_left , class="form-control") }}
+            </div>
+          </div>     
+        </div>
+        <div class="container" id="bottombox">
+          <div class="row">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">Required</div>
+            <div class="col-sm-4">Actual</div>
+          </div>
+          <div class="row mx-1">
+            <div class="col-sm-4">1 to 3 (+-.0001”)</div>
+            <div class="col-sm-4">
+              {{ gauge_data.type.referencedata.requirement1 }}
+            </div>
+            <div class="col-sm-4">
+              {{ render_nolabelfield(form.measurement1 , class="form-control") }}
+            </div>
+          </div>
+          <div class="row mx-1">
+            <div class="col-sm-4">1 to 4 (+-.0002”)</div>
+            <div class="col-sm-4">
+              {{ gauge_data.type.referencedata.requirement2 }}
+            </div>
+            <div class="col-sm-4">
+              {{ render_nolabelfield(form.measurement2 , class="form-control") }}
+            </div>
+          </div>
+          <div class="row mx-1">
+            <div class="col-sm-4">1 to 5 (+-.0002”)</div>
+            <div class="col-sm-4">
+              {{ gauge_data.type.referencedata.requirement3 }}
+            </div>
+            <div class="col-sm-4">
+              {{ render_nolabelfield(form.measurement3 , class="form-control") }}
+            </div>
+          </div>
+          <div class="row mx-1">
+            <div class="col-sm-4">1 to 6 (+-.0002”)</div>
+            <div class="col-sm-4">
+              {{ gauge_data.type.referencedata.requirement4 }}
+            </div>
+            <div class="col-sm-4">
+              {{ render_nolabelfield(form.measurement4 , class="form-control") }}
+            </div>
+          </div>
+          <div class="row mx-1">
+            <div class="col-sm-4">2 to 4 (+-.0002”)</div>
+            <div class="col-sm-4">
+              {{ gauge_data.type.referencedata.requirement5 }}
+            </div>
+            <div class="col-sm-4">
+              {{ render_nolabelfield(form.measurement5 , class="form-control") }}
+            </div>
+          </div>
+          <div class="row mx-1">
+            <div class="col-sm-4">2 to 5 (+-.0002”)</div>
+            <div class="col-sm-4">
+              {{ gauge_data.type.referencedata.requirement6 }}
+            </div>
+            <div class="col-sm-4">
+              {{ render_nolabelfield(form.measurement6 , class="form-control") }}
+            </div>
+          </div>
+          <div class="row mx-1">
+            <div class="col-sm-4">2 to 6 (+-.0002”)</div>
+            <div class="col-sm-4">
+              {{ gauge_data.type.referencedata.requirement7 }}
+            </div>
+            <div class="col-sm-4">
+              {{ render_nolabelfield(form.measurement7 , class="form-control") }}
+            </div>
+          </div>
+          <div class="row mx-1">
+            <div class="col-sm-4">3 to 4 (+-.0001”)</div>
+            <div class="col-sm-4">
+              {{ gauge_data.type.referencedata.requirement8 }}
+            </div>
+            <div class="col-sm-4">
+              {{ render_nolabelfield(form.measurement8, class="form-control") }}
+            </div>
+          </div>
+          <div class="row mx-1">
+            <div class="col-sm-4">3 to 5 (+-.0002”)</div>
+            <div class="col-sm-4">
+              {{ gauge_data.type.referencedata.requirement9 }}
+            </div>
+            <div class="col-sm-4">
+              {{ render_nolabelfield(form.measurement9 , class="form-control") }}
+            </div>
+          </div>
+          <div class="row mx-1">
+            <div class="col-sm-4">3 to 6 (+-.0002”)</div>
+            <div class="col-sm-4">
+              {{ gauge_data.type.referencedata.requirement10 }}
+            </div>
+            <div class="col-sm-4">
+              {{ render_nolabelfield(form.measurement10 , class="form-control") }}
+            </div>
+          </div>
+          <div class="row mx-1">
+            <div class="col-sm-4">4 to 5 (+-.0001”)</div>
+            <div class="col-sm-4">
+              {{ gauge_data.type.referencedata.requirement11 }}
+            </div>
+            <div class="col-sm-4">
+              {{ render_nolabelfield(form.measurement11 , class="form-control") }}
+            </div>
+          </div>
+          <div class="row mx-1">
+            <div class="col-sm-4">4 to 6 (+-.0002”)</div>
+            <div class="col-sm-4">
+              {{ gauge_data.type.referencedata.requirement12 }}
+            </div>
+            <div class="col-sm-4">
+              {{ render_nolabelfield(form.measurement12 , class="form-control") }}
+            </div>
+          </div>
+          <div class="row mx-1">
+            <div class="col-sm-4">5 to 6 (+-.0001”)</div>
+            <div class="col-sm-4">
+              {{ gauge_data.type.referencedata.requirement13 }}
+            </div>
+            <div class="col-sm-4">
+              {{ render_nolabelfield(form.measurement13 , class="form-control") }}
+            </div>
+          </div>
+        </div>  
+              {{ form.submit(class="btn btn-secondary mt-4", value='Store Calibration') }}
+
+              
+
+      </fieldset>
+    </form>
+  </div>
+</div>
+
+  {% endblock %}
+
+  {% block scripts %}
+  {% endblock %}

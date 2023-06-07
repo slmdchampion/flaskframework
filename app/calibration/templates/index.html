@@ -1,0 +1,18 @@
+{% extends "navbar.html" %}
+{% from "_formhelpers.html" import render_nolabelfield %}
+{% from "_formhelpers.html" import render_flatfield %}
+{% block title %}Add Product {% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('calibration.static', filename='css/index.css') }}" />
+{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col"></div>
+  <div class="col-6">
+    {% include "listcalibrationsdue.html" %}
+  </div>
+  <div class="col"></div>
+</div>
+{% endblock %}
+{% block scripts %}
+{% endblock %}

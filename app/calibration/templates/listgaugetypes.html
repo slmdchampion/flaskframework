@@ -1,0 +1,54 @@
+{% extends "navbar.html" %}
+{% from "_formhelpers.html" import render_nolabelfield %}
+{% from "_formhelpers.html" import render_flatfield %}
+{% block title %}{{ title }}{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('calibration.static', filename='css/listgaugetypes.css') }}" />
+{% endblock %}
+{% block content %}
+
+
+<div class="row">
+  <div class="col"></div>
+  <div class="col-6">
+    <h1 class="display-5 text-center">{{ title }}</h1>
+    <form action="{{ action }}" method="post">
+      {{ form.csrf_token }}
+      <table class="table table-success table-striped">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Description</th>
+            <th scope="col">Calibration Reference</th>
+            <th scope="col">Calibration Link</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in table_data %}
+          <tr>
+            <td>{{ row.id }}<a href="/calibration/editgaugetype?id={{ row.id }}" class="btn btn-success btn-sm"><i class="bi bi-pencil"></i></a></td>
+            <td>{{ row.description }}</td>
+            <td>
+              {% if row.calibration_reference %}
+              <a href="/calibration/editcalibrationreference?id={{ row.calibration_reference }}" class="btn btn-success btn-sm"><i class="bi bi-pencil"></i>{{ row.calibration_reference }}</a>
+              {% else %}
+              <button type="submit" id="button_edit{{ row.id }}" name="edit_id" value="{{ row.id }}" class="btn btn-secondary btn-sm">
+                <i class="bi bi-plus-circle"></i>
+              </button>
+              {% endif %} 
+            </td>
+            <td>{{ row.calibration_link }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </form>
+  </div>
+  <div class="col">
+    <a class="btn btn-success" href="{{ url_for('calibration.addgaugetype') }}">
+      <i class="bi bi-plus-circle" style="font-size: 3rem">
+      </i>
+    </a>
+  </div>
+</div>
+{% endblock %}

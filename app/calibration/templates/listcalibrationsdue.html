@@ -1,0 +1,25 @@
+<h1 class="display-5 text-center">{{ title }}</h1>
+<table class="table table-success table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Serial #</th>
+      <th scope="col">Description</th>
+      <th scope="col">Due Date</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in table_data %}
+    <tr>
+      <td>{{ row.serial_number }}</td>
+      <td>{{ row.description }}</td>
+      <td>{{ row.due_date }}</td>
+      <td>
+        {% if row.type.calibration_link %}
+          <a href="/calibration/{{ row.type.calibration_link }}?id={{ row.id }}" class="btn btn-success btn-sm"><i class="bi bi-rulers"></i></a>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

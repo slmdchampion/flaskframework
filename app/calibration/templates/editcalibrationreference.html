@@ -1,0 +1,88 @@
+
+{% extends "navbar.html" %}
+{% from "_formhelpers.html" import render_nolabelfield %}
+{% from "_formhelpers.html" import render_flatfield %}
+{% from "_formhelpers.html" import render_field %}
+{% block title %}{{ title }}{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('calibration.static', filename='css/editcalibrationreferences.css') }}" />
+{% endblock %}
+{% block content %}
+<div class="container-fluid h-100" >
+  <div class="row h-100 align-items-center">
+    {% include "security/_messages.html" %}
+    <h1 class="display-5 text-center">{{ title }}</h1>
+    <form name="form1" id="form1" action="{{ action }}" method="POST" enctype="multipart/form-data">
+      {{ form.csrf_token }}
+      <div class="row">
+        <div class="col">
+          <div class="col">
+            {{ render_field(form.gauge_type, class="form-control") }}            
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="row row-cols-5">
+            <div class="col">{{ render_field(form.requirement1, class="form-control", value=form_data.requirement1) }}</div>
+            <div class="col">{{ render_field(form.requirement2, class="form-control", value=form_data.requirement2) }}</div>
+            <div class="col">{{ render_field(form.requirement3, class="form-control", value=form_data.requirement3) }}</div>
+            <div class="col">{{ render_field(form.requirement4, class="form-control", value=form_data.requirement4) }}</div>
+            <div class="col">{{ render_field(form.requirement5, class="form-control", value=form_data.requirement5) }}</div>
+            <div class="col">{{ render_field(form.requirement6, class="form-control", value=form_data.requirement6) }}</div>
+            <div class="col">{{ render_field(form.requirement7, class="form-control", value=form_data.requirement7) }}</div>
+            <div class="col">{{ render_field(form.requirement8, class="form-control", value=form_data.requirement8) }}</div>
+            <div class="col">{{ render_field(form.requirement9, class="form-control", value=form_data.requirement9) }}</div>
+            <div class="col">{{ render_field(form.requirement10, class="form-control", value=form_data.requirement10) }}</div>
+            <div class="col">{{ render_field(form.requirement11, class="form-control", value=form_data.requirement11) }}</div>
+            <div class="col">{{ render_field(form.requirement12, class="form-control", value=form_data.requirement12) }}</div>
+            <div class="col">{{ render_field(form.requirement13, class="form-control", value=form_data.requirement13) }}</div>
+            <div class="col">{{ render_field(form.requirement14, class="form-control", value=form_data.requirement14) }}</div>
+            <div class="col">{{ render_field(form.requirement15, class="form-control", value=form_data.requirement15) }}</div>
+            <div class="col">{{ render_field(form.requirement16, class="form-control", value=form_data.requirement16) }}</div>
+            <div class="col">{{ render_field(form.requirement17, class="form-control", value=form_data.requirement17) }}</div>
+            <div class="col">{{ render_field(form.requirement18, class="form-control", value=form_data.requirement18) }}</div>
+            <div class="col">{{ render_field(form.requirement19, class="form-control", value=form_data.requirement19) }}</div>
+            <div class="col">{{ render_field(form.requirement20, class="form-control", value=form_data.requirement20) }}</div>
+            <div class="col">{{ render_field(form.requirement21, class="form-control", value=form_data.requirement21) }}</div>
+            <div class="col">{{ render_field(form.requirement22, class="form-control", value=form_data.requirement22) }}</div>
+            <div class="col">{{ render_field(form.requirement23, class="form-control", value=form_data.requirement23) }}</div>
+            <div class="col">{{ render_field(form.requirement24, class="form-control", value=form_data.requirement24) }}</div>
+            <div class="col">{{ render_field(form.requirement25, class="form-control", value=form_data.requirement25) }}</div>
+            <div class="col">{{ render_field(form.requirement26, class="form-control", value=form_data.requirement26) }}</div>
+            <div class="col">{{ render_field(form.requirement27, class="form-control", value=form_data.requirement27) }}</div>
+            <div class="col">{{ render_field(form.requirement28, class="form-control", value=form_data.requirement28) }}</div>
+            <div class="col">{{ render_field(form.requirement29, class="form-control", value=form_data.requirement29) }}</div>
+            <div class="col">{{ render_field(form.requirement30, class="form-control", value=form_data.requirement30) }}</div> 
+          </div>
+          <div class="row">
+            <div class="col">{{ render_field(form.bool1, class="form-control", value=form_data.bool1) }}</div>
+            <div class="col">{{ render_field(form.bool2, class="form-control", value=form_data.bool2) }}</div>
+            <div class="col">{{ render_field(form.bool3, class="form-control", value=form_data.bool3) }}</div>
+          </div>
+          <div class="row">
+            <div class="col">{{ render_field(form.standard1, class="form-control", value=form_data.standard1) }}</div>
+            <div class="col">{{ render_field(form.standard2, class="form-control", value=form_data.standard2) }}</div>
+            <div class="col">{{ render_field(form.standard3, class="form-control", value=form_data.standard3) }}</div>
+            <div class="col">{{ render_field(form.standard4, class="form-control", value=form_data.standard4) }}</div>
+          </div>
+          {{ form.submit(class="btn btn-secondary mt-4")|safe }}
+        </div>
+        <div class="col"></div>
+      </div>
+
+    </form>
+</div>
+{% endblock %}
+{% block scripts %}
+{% endblock %}
+
+
+
+
+
+{% for row in gauge_types %}
+{% if row.id==gaugetype_id: %}
+<option selected value="{{ row.id }}">{{ row.description }}</option>
+{% else %}
+<option value="{{ row.id }}">{{ row.description }}</option>
+{% endif %}
+{% endfor %}
