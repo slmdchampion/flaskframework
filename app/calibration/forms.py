@@ -45,7 +45,8 @@ class LeadStandardCalibrationForm(FlaskForm):
     submit = SubmitField('Save Record')
 
 class EditCalibrationReferencesForm(FlaskForm):
-    gauge_type = SelectField("Gauge Type:")
+    gauge_type = SelectField("Gauge Type:", choices=(), validate_choice=False)
+    id = IntegerField('ID: ', validators=[DataRequired()])
     requirement1 = FloatField("Requirement 1", default="")
     requirement2 = FloatField("Requirement 2", default=0)
     requirement3 = FloatField("Requirement 3", default=0)
@@ -76,7 +77,7 @@ class EditCalibrationReferencesForm(FlaskForm):
     requirement28 = FloatField("Requirement 28", default=0)
     requirement29 = FloatField("Requirement 29", default=0)
     requirement30 = FloatField("Requirement 30", default=0)
-    bool1 = SelectField('Bool 1:', choices=[('PASS','PASS'),('FAIL','FAIL')])
+    bool1 = SelectField('Bool 1:', choices=[('PASS','PASS'),('FAIL','FAIL')], default='PASS')
     bool2 = SelectField('Bool 2:', choices=[('PASS','PASS'),('FAIL','FAIL')])
     bool3 = SelectField('Bool 3:', choices=[('PASS','PASS'),('FAIL','FAIL')])
     standard1 = IntegerField("Standard 1:", default=168)
@@ -100,4 +101,14 @@ class AddGaugeTypesForm(FlaskForm):
     description = StringField('Description:', validators=[DataRequired()])
     calibration_reference = IntegerField('Calibration Reference:', validators=[Optional()])
     calibration_link = StringField('Calibration Link')
+    submit = SubmitField('Save Record')
+
+
+class EditUncertaintiesForm(FlaskForm):
+    id = IntegerField('ID: ', default=0)
+    process_field = StringField('Process:', validators=[DataRequired()])
+    # process = StringField("Process:", validators=[DataRequired()])
+    # process = StringField('Process:', validators=[DataRequired()])
+    gauge_type = SelectField("Gauge Type:", choices=(), validate_choice=False)
+    uncertainty = FloatField("Uncertainty", default=0)
     submit = SubmitField('Save Record')

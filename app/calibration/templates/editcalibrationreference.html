@@ -17,7 +17,8 @@
       <div class="row">
         <div class="col">
           <div class="col">
-            {{ render_field(form.gauge_type, class="form-control") }}            
+            {{ render_field(form.gauge_type, class="form-control") }}
+            {{ render_field(form.id, class="form-control", value=form_data.id, readonly=true) }}     
           </div>
         </div>
         <div class="col-6">

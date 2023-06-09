@@ -9,46 +9,66 @@
 
 
 <div class="row">
-  <div class="col"></div>
-  <div class="col-6">
+  <div class="col-xl"></div>
+  <div class="col-xl-8 col-12">
+    {% include "security/_messages.html" %}
     <h1 class="display-5 text-center">{{ title }}</h1>
     <form action="{{ action }}" method="post">
       {{ form.csrf_token }}
       <table class="table table-success table-striped">
         <thead>
           <tr>
-            <th scope="col">ID</th>
+            <th scope="col">              
+              <a class="btn btn-secondary btn-sm" href="{{ url_for('calibration.addgaugetype') }}">
+                ID
+                <i class="bi bi-plus-circle" style="font-size: 1rem">
+                </i>
+              </a>
+            </th>
             <th scope="col">Description</th>
-            <th scope="col">Calibration Reference</th>
-            <th scope="col">Calibration Link</th>
+            <th scope="col" class="text-wrap">Calibration Reference</th>
+            <th scope="col" class="text-wrap">Calibration Link</th>
+            <th scope="col">Process</th>
+            <th scope="col">Uncertainty</th>
           </tr>
+          
         </thead>
         <tbody>
           {% for row in table_data %}
           <tr>
-            <td>{{ row.id }}<a href="/calibration/editgaugetype?id={{ row.id }}" class="btn btn-success btn-sm"><i class="bi bi-pencil"></i></a></td>
-            <td>{{ row.description }}</td>
+            <td><a href="/calibration/editgaugetype?id={{ row[0].id }}" class="btn btn-success btn-sm">{{ row[0].id }}<i class="bi bi-pencil"></i></a></td>
+            <td>{{ row[0].description }}</td>
             <td>
-              {% if row.calibration_reference %}
-              <a href="/calibration/editcalibrationreference?id={{ row.calibration_reference }}" class="btn btn-success btn-sm"><i class="bi bi-pencil"></i>{{ row.calibration_reference }}</a>
+              {% if row[0].calibration_reference %}
+              <a href="{{ url_for('calibration.editcalibrationreference')}}?id={{ row[0].calibration_reference }}&gauge_type_id={{ row[0].id }}" class="btn btn-success btn-sm">
+                <i class="bi bi-pencil"></i>{{ row[0].calibration_reference }}
+              </a>
               {% else %}
-              <button type="submit" id="button_edit{{ row.id }}" name="edit_id" value="{{ row.id }}" class="btn btn-secondary btn-sm">
+              <button type="submit" id="button_add_calibration_reference" name="edit_id" value="{{ row[0].id }}" class="btn btn-secondary btn-sm">
                 <i class="bi bi-plus-circle"></i>
               </button>
               {% endif %} 
             </td>
-            <td>{{ row.calibration_link }}</td>
+            <td>{{ row[0].calibration_link }}</td>
+            <td>
+              {% if row[1].process %}
+              <a href="{{ url_for('calibration.edituncertainty')}}?id={{ row[1].id }}" class="btn btn-success btn-sm">
+                <i class="bi bi-pencil"></i>{{ row[1].process }}
+              {% else %}
+              <a href="{{ url_for('calibration.adduncertainty')}}?gauge_type_id={{ row[0].id }}" class="btn btn-secondary btn-sm">
+                <i class="bi bi-plus-circle"></i>{{ row[1].process }}
+              </a>
+              {% endif %}
+              </td>
+            <td>{{ row[1].uncertainty }}</td>
           </tr>
           {% endfor %}
         </tbody>
       </table>
     </form>
   </div>
-  <div class="col">
-    <a class="btn btn-success" href="{{ url_for('calibration.addgaugetype') }}">
-      <i class="bi bi-plus-circle" style="font-size: 3rem">
-      </i>
-    </a>
+  <div class="col-xl">
+
   </div>
 </div>
 {% endblock %}

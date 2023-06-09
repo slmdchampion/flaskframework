@@ -17,7 +17,8 @@
                 "shell",
              ],
             "jinja": true,
-            "justMyCode": true
+            "justMyCode": true,
+            "console": "integratedTerminal"
         },
         {
             "name": "Python: Flask",

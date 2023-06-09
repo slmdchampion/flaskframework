@@ -164,6 +164,7 @@ class Gauge_types(sa.Model):
     calibration_reference = sa.Column('calibration reference', sa.Integer, ForeignKey("calibration references.ID"))
     calibration_link = sa.Column('calibration link', sa.String)
     gauges = sa.relationship('Gauges', backref='type', lazy='dynamic')
+    uncertainties = sa.relationship('Uncertainties', backref='type', lazy='dynamic')
 
 class Uncertainties(sa.Model):
     id = sa.Column('ID', sa.Integer, primary_key=True)

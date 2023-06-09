@@ -1,0 +1,33 @@
+
+{% extends "navbar.html" %}
+{% from "_formhelpers.html" import render_nolabelfield %}
+{% from "_formhelpers.html" import render_flatfield %}
+{% from "_formhelpers.html" import render_field %}
+{% block title %}{{ title }}{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('calibration.static', filename='css/edituncertainty.css') }}" />
+{% endblock %}
+{% block content %}
+<div class="container-fluid h-100" >
+  <div class="row h-100 align-items-center">
+    {% include "security/_messages.html" %}
+    <h1 class="display-5 text-center">{{ title }}</h1>
+    <form name="form1" id="form1" action="{{ action }}" method="POST" enctype="multipart/form-data">
+      {{ form.csrf_token }}
+      <div class="row">
+        <div class="col"></div>
+        <div class="col-6">
+          <div class="col">{{ render_field(form.id, class="form-control", value=form_data.id, readonly=true) }}</div>
+          <div class="col">{{ render_field(form.process_field, class="form-control", value=form_data.process) }}</div>
+          <div class="col">{{ render_field(form.gauge_type, class="form-control") }}</div>
+          <div class="col">{{ render_field(form.uncertainty, class="form-control", value=form_data.uncertainty) }}</div>
+          {{ form.submit(class="btn btn-secondary mt-4")|safe }}
+        </div>
+        <div class="col"></div>
+      </div>
+
+    </form>
+</div>
+{% endblock %}
+{% block scripts %}
+{% endblock %}

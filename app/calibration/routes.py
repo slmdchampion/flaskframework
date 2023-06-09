@@ -18,7 +18,7 @@ from app.database.calibration import (Gauges,
 from app.calibration.forms import (LeadStandardCalibrationForm, 
                                    EditCalibrationReferencesForm, 
                                    ListGaugeTypesForm, 
-                                   EditGaugeTypesForm, AddGaugeTypesForm)
+                                   EditGaugeTypesForm, AddGaugeTypesForm, EditUncertaintiesForm)
 
 index_blueprint = Blueprint('index', __name__, template_folder='templates', static_folder='static')
 calibration_blueprint = Blueprint('calibration', __name__, template_folder='templates', static_folder='static', url_prefix='/calibration')
@@ -37,12 +37,13 @@ def index():
 def listgaugetypes():
     form = ListGaugeTypesForm()
     if request.method == 'GET':
-        gauge_types = sa.session.scalars(sa.select(Gauge_types)).all()
+        # gauge_types = sa.session.scalars(sa.select(Gauge_types)).all()
+        gauge_types = sa.session.execute(sa.select(Gauge_types,Uncertainties).join(Uncertainties, Gauge_types.id==Uncertainties.gauge_type, isouter=True).order_by(Gauge_types.id)).all()
         return render_template('listgaugetypes.html', form=form, table_data=gauge_types, 
                                title='Gauge Types', action=url_for('calibration.listgaugetypes'))
     if form.validate_on_submit():
         gaugetype_id = request.form.get('edit_id')
-        return redirect(url_for('calibration.addcalibrationreference', id=gaugetype_id))
+        return redirect(url_for('calibration.addcalibrationreference', gauge_type_id=gaugetype_id))
     
 @calibration_blueprint.route('editgaugetype', methods=['POST', 'GET'])
 def editgaugetype():
@@ -59,7 +60,44 @@ def editgaugetype():
         gaugetype_data.calibration_link=form.calibration_link.data
         sa.session.commit()
         return redirect(url_for('calibration.listgaugetypes'))
+    
+@calibration_blueprint.route('adduncertainty', methods=['POST', 'GET'])
+def adduncertainty():
+    form = EditUncertaintiesForm()
+    if request.method == 'GET':
+        gaugetype_id = request.args.get('id')
+        gauge_types = [(row.id,row.description) for row in sa.session.scalars(sa.select(Gauge_types)).all()]
+        form.gauge_type.choices = gauge_types
+        form.gauge_type.data = gaugetype_id
+        return render_template('edituncertainty.html', form=form, form_data={'id':'0','description':'','calibration_reference':'','calibration_link':''}, 
+                               action=url_for('calibration.adduncertainty'), title='Add Uncertainty')
+    if form.validate_on_submit():
+        uncertainty_data = Uncertainties(process=form.process_field.data, gauge_type=form.gauge_type.data, uncertainty=form.uncertainty.data)
+        sa.session.add(uncertainty_data)
+        sa.session.commit()
+        flash('Uncertainty Added...')
+        return redirect(url_for('calibration.listgaugetypes'))
 
+@calibration_blueprint.route('edituncertainty', methods=['POST', 'GET'])
+def edituncertainty():
+    form = EditUncertaintiesForm()
+    if request.method == 'GET':
+        uncertainty_id = request.args.get('id')
+        uncertainty_data = sa.get_or_404(Uncertainties, uncertainty_id)
+        gauge_types = [(row.id,row.description) for row in sa.session.scalars(sa.select(Gauge_types)).all()]
+        form.gauge_type.choices = gauge_types
+        form.gauge_type.data = uncertainty_data.gauge_type
+        return render_template('edituncertainty.html', form=form, form_data=uncertainty_data, 
+                               action=url_for('calibration.edituncertainty'), title='Edit Uncertainty')
+    if form.validate_on_submit():
+        uncertainty_data = sa.get_or_404(Uncertainties, form.id.data)
+        uncertainty_data.process=form.process_field.data
+        uncertainty_data.gauge_type=form.gauge_type.data
+        uncertainty_data.uncertainty=form.uncertainty.data
+        sa.session.commit()
+        flash('Uncertainty Modified...')
+        return redirect(url_for('calibration.listgaugetypes'))
+    
 @calibration_blueprint.route('addgaugetype', methods=['POST', 'GET'])
 def addgaugetype():
     form = AddGaugeTypesForm()
@@ -80,12 +118,13 @@ def addgaugetype():
 def addcalibrationreference():
     form = EditCalibrationReferencesForm()
     if request.method == 'GET':
-        gaugetype_id = request.args.get('id', 0)
+        gaugetype_id = request.args.get('gauge_type_id', 0)
+        reference_id = 37 # default reference data
         gauge_types = [(row.id,row.description) for row in sa.session.scalars(sa.select(Gauge_types)).all()]
         form.gauge_type.choices = gauge_types
         form.gauge_type.data = gaugetype_id
-        reference_data = sa.get_or_404(Calibration_references, 37)
-        return render_template('editcalibrationreference.html', form=form, form_data=reference_data, gaugetype_id=gaugetype_id, gauge_types=[('1','one'),('2','two')], 
+        reference_data = sa.get_or_404(Calibration_references, reference_id)
+        return render_template('editcalibrationreference.html', form=form, form_data=reference_data, gaugetype_id=gaugetype_id, gauge_types=[], 
                                action=url_for('calibration.addcalibrationreference'), title='Add Calibration Reference')
     if form.validate_on_submit():
         reference = Calibration_references(requirement1=form.requirement1.data,
@@ -125,10 +164,9 @@ def addcalibrationreference():
                                            standard2=form.standard2.data,
                                            standard3=form.standard3.data,
                                            standard4=form.standard4.data)
-        sa.session.add(reference)
-        if form.gaugetype_id.data:
-            gaugetype_data = sa.get_or_404(Gauge_types, form.gaugetype.data)
-            gaugetype_data.calibration_reference=reference.calibration_reference
+        sa.session.add(reference)    
+        gaugetype_data = sa.get_or_404(Gauge_types, form.gauge_type.data)
+        gaugetype_data.calibration_reference=reference.id
         sa.session.commit()
         return redirect(url_for('calibration.listgaugetypes'))
     
@@ -137,9 +175,10 @@ def editcalibrationreference():
     form = EditCalibrationReferencesForm()
     if request.method == 'GET':
         reference_id = request.args.get('id')
+        gaugetype_id = request.args.get('gauge_type_id')
         gauge_types = [(row.id,row.description) for row in sa.session.scalars(sa.select(Gauge_types)).all()]
         form.gauge_type.choices = gauge_types
-        # form.gauge_type.data = gaugetype_id
+        form.gauge_type.data = gaugetype_id
         reference_data = sa.get_or_404(Calibration_references, reference_id)
         return render_template('editcalibrationreference.html', form=form, form_data=reference_data, 
                                action=url_for('calibration.editcalibrationreference'), title='Edit Calibration Reference')
@@ -182,11 +221,11 @@ def editcalibrationreference():
         reference_data.standard2=form.standard2.data
         reference_data.standard3=form.standard3.data
         reference_data.standard4=form.standard4.data
-        if form.gaugetype_id.data:
-            gaugetype_data = sa.get_or_404(Gauge_types, form.gaugetype.data)
-            gaugetype_data.calibration_reference=reference_data.calibration_reference
+
+        gaugetype_data = sa.get_or_404(Gauge_types, form.gauge_type.data)
+        gaugetype_data.calibration_reference=form.id.data
         sa.session.commit()
-        return render_template_string("modified")
+        return redirect(url_for('calibration.listgaugetypes'))
     
 @calibration_blueprint.route('leadstandardcert', methods=['POST', 'GET'])
 def leadstandardcert():
